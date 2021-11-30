@@ -7,9 +7,10 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const [datas, setdatas] = useState([]);
   const navigate = useNavigate();
+  const [loading, setloading] = useState(true);
   useEffect(() => {
     fetch();
-  }, []);
+  }, [datas]);
   let fetch = async () => {
     try {
       let get = await axios.get(
@@ -20,34 +21,47 @@ function Home() {
           },
         }
       );
-      console.log(get);
+      setloading(false);
       setdatas([...get.data]);
-    } catch (error) {}
+    } catch (error) {
+      setloading(false);
+    }
   };
 
   return (
     <div className="register">
       <div className="heading">Profile</div>
-      {datas.map((data) => {
-        return (
-          <div>
-            <div className="name" id="spl">
-              <Avatar alt={data.name} src="" style={{ textAlign: "center" }} />
-            </div>
-            <div className="name">{data.name}</div>
-            <div className="name">{data.gmail}</div>
-            <div className="name">{data.no}</div>
-            <div className="name">{data.street}</div>
-            <div className="name">{data.town}</div>
-            <div className="name">{data.district}</div>
-            <div className="name">{data.state}</div>
-            <div className="name">{data.pin}</div>
-            <div className="ans" id="submit">
-              <Link to={`/edit/${data._id}`}> Edit</Link>
-            </div>
-          </div>
-        );
-      })}
+      {loading ? (
+        <h3>loading...</h3>
+      ) : (
+        <div>
+          {datas.map((data) => {
+            return (
+              <div>
+                <div className="name" id="spl">
+                  <Avatar
+                    alt={data.name}
+                    src=""
+                    style={{ textAlign: "center" }}
+                  />
+                </div>
+                <div className="name">{data.name}</div>
+                <div className="name">{data.gmail}</div>
+                <div className="name">{data.no}</div>
+                <div className="name">{data.street}</div>
+                <div className="name">{data.town}</div>
+                <div className="name">{data.district}</div>
+                <div className="name">{data.state}</div>
+                <div className="name">{data.pin}</div>
+                <div className="ans" id="submit">
+                  <Link to={`/edit/${data._id}`}> Edit</Link>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <div className="ans" id="submit">
         <button
           onClick={() => {
